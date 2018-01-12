@@ -1,0 +1,160 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Conversion between different bases &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Transformations between Celestial coordinate systems" href="celestial.html" />
+    <link rel="prev" title="Conversion between axes coordinate systems" href="axes.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="celestial.html" title="Transformations between Celestial coordinate systems"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="axes.html" title="Conversion between axes coordinate systems"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../transformations.html" accesskey="U">Coordinate and time transformations</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.transformations.base">
+<span id="conversion-between-different-bases"></span><h1>Conversion between different bases<a class="headerlink" href="#module-sapphire.transformations.base" title="Permalink to this headline">¶</a></h1>
+<p>Perform base conversions</p>
+<p>Currently supports conversion between base 10 (decimal) and
+base 60 (sexagesimal).</p>
+<dl class="function">
+<dt id="sapphire.transformations.base.decimal_to_sexagesimal">
+<code class="descclassname">sapphire.transformations.base.</code><code class="descname">decimal_to_sexagesimal</code><span class="sig-paren">(</span><em>decimal</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.transformations.base.decimal_to_sexagesimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert decimal hours or degrees to sexagesimal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>decimal</strong> – decimal number to be converted to sexagismal.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tuple of either (hours, minutes, seconds) or
+(degrees, arcminutes, arcseconds).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.transformations.base.sexagesimal_to_decimal">
+<code class="descclassname">sapphire.transformations.base.</code><code class="descname">sexagesimal_to_decimal</code><span class="sig-paren">(</span><em>hd</em>, <em>minutes</em>, <em>seconds</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.transformations.base.sexagesimal_to_decimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert sexagesimal hours or degrees to decimal.</p>
+<p>Warning! Ensure each part has the correct sign.
+e.g. -111d36m12s should be entered as (-111, -36, -12).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hd</strong> – hours or degrees.</li>
+<li><strong>minutes</strong> – minutes or arcminutes.</li>
+<li><strong>seconds</strong> – seconds or arcseconds.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">decimal hours or degrees.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="axes.html"
+                        title="previous chapter">Conversion between axes coordinate systems</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="celestial.html"
+                        title="next chapter">Transformations between Celestial coordinate systems</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="celestial.html" title="Transformations between Celestial coordinate systems"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="axes.html" title="Conversion between axes coordinate systems"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../transformations.html" >Coordinate and time transformations</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

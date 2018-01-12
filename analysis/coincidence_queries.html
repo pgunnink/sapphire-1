@@ -1,0 +1,415 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Query coincidences from a datafile &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Search for coincidences between HiSPARC stations" href="coincidences.html" />
+    <link rel="prev" title="Data timing and signal calibration" href="calibration.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="coincidences.html" title="Search for coincidences between HiSPARC stations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="calibration.html" title="Data timing and signal calibration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../analysis.html" accesskey="U">Data analysis</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.analysis.coincidence_queries">
+<span id="query-coincidences-from-a-datafile"></span><h1>Query coincidences from a datafile<a class="headerlink" href="#module-sapphire.analysis.coincidence_queries" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.coincidence_queries.</code><code class="descname">CoincidenceQuery</code><span class="sig-paren">(</span><em>data</em>, <em>coincidence_group='/coincidences'</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform queries on an ESD file where coincidences have been analysed.</p>
+<p>Functions in this class build and perform queries to easily filter
+coincidences based on station participation and station
+organization. This assumes coincidences have been analysed using
+<a class="reference internal" href="coincidences.html#sapphire.analysis.coincidences.CoincidencesESD" title="sapphire.analysis.coincidences.CoincidencesESD"><code class="xref py py-class docutils literal"><span class="pre">CoincidencesESD</span></code></a>.</p>
+<p>First initiate the class so it can get the correct tables, then get
+coincidences using one of the functions (all_coincidences, any, all,
+at_least), then get the events for these coincidences using other
+functions (all_events, events_from_[stations, subcluster, cluster]).</p>
+<p>An exception will occur when you include a station in a query that
+does not occur in the datafile.</p>
+<p>Example usage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sapphire</span> <span class="k">import</span> <span class="n">CoincidenceQuery</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cq</span> <span class="o">=</span> <span class="n">CoincidenceQuery</span><span class="p">(</span><span class="s1">&#39;2013_8_1.h5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coincidences</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="mi">501</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">],</span> <span class="n">iterator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">events</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">all_events</span><span class="p">(</span><span class="n">coincidences</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">specific_events</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">events_from_stations</span><span class="p">(</span><span class="n">coincidences</span><span class="p">,</span>
+<span class="gp">... </span>                                         <span class="p">[</span><span class="mi">501</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cq</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Setup variables to point to the tables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> – either a PyTables file or path to a HDF5 file.</li>
+<li><strong>coincidence_group</strong> – path to the coincidences group.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.finish">
+<code class="descname">finish</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.finish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean-up after using</p>
+<p>Do not use if you opened the file yourself and still intent to
+use it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.all_coincidences">
+<code class="descname">all_coincidences</code><span class="sig-paren">(</span><em>iterator=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.all_coincidences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all coincidences</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">all coincidences.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.any">
+<code class="descname">any</code><span class="sig-paren">(</span><em>stations</em>, <em>start=None</em>, <em>stop=None</em>, <em>iterator=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.any" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter for coincidences that contain any of the given stations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stations</strong> – list of stations from which any need to be in
+a coincidence.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">coincidences matching the query.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.all">
+<code class="descname">all</code><span class="sig-paren">(</span><em>stations</em>, <em>start=None</em>, <em>stop=None</em>, <em>iterator=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter for coincidences that contain all of the given stations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stations</strong> – list of stations which all need to be in a
+coincidence.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">coincidences matching the query.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.at_least">
+<code class="descname">at_least</code><span class="sig-paren">(</span><em>stations</em>, <em>n</em>, <em>start=None</em>, <em>stop=None</em>, <em>iterator=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.at_least" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter coincidences to contain at least n of the given stations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stations</strong> – list of stations from which any at least n of
+any combinations need to be in a coincidence.</li>
+<li><strong>n</strong> – minimum number of given stations to be in a coincidence.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">coincidences matching the query.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.timerange">
+<code class="descname">timerange</code><span class="sig-paren">(</span><em>start</em>, <em>stop</em>, <em>iterator=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.timerange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query based on timestamps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> – timestamp from which to look for coincidences.</li>
+<li><strong>stop</strong> – end timestamp for coincidences.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">coincidences within the specified timerange.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.perform_query">
+<code class="descname">perform_query</code><span class="sig-paren">(</span><em>query</em>, <em>iterator=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.perform_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a query on the coincidences table</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> – a valid PyTables query string for the coincidences
+table.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">coincidences matching the query.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.all_events">
+<code class="descname">all_events</code><span class="sig-paren">(</span><em>coincidences</em>, <em>n=0</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.all_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all events for the given coincidences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidences</strong> – list of coincidence rows.</li>
+<li><strong>n</strong> – minimum number of events per coincidence.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of events for each coincidence.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.all_reconstructions">
+<code class="descname">all_reconstructions</code><span class="sig-paren">(</span><em>coincidences</em>, <em>n=0</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.all_reconstructions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all reconstructed events for the given coincidences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidences</strong> – list of coincidence rows.</li>
+<li><strong>n</strong> – minimum number of events per coincidence.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of reconstructed events for each coincidence.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.minimum_events_for_coincidence">
+<code class="descname">minimum_events_for_coincidence</code><span class="sig-paren">(</span><em>coincidences_events</em>, <em>n=2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.minimum_events_for_coincidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter coincidences to only include those with at least n events.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>coincidences_events</strong> – list of events for each coincidence.</li>
+<li><strong>n</strong> – minimum number of events per coincidence.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.events_from_stations">
+<code class="descname">events_from_stations</code><span class="sig-paren">(</span><em>coincidences</em>, <em>stations</em>, <em>n=2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.events_from_stations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only get events for specific stations for coincidences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidences</strong> – list of coincidence rows.</li>
+<li><strong>stations</strong> – list of station numbers to filter events for.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of filtered events for each coincidence.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.reconstructions_from_stations">
+<code class="descname">reconstructions_from_stations</code><span class="sig-paren">(</span><em>coincidences</em>, <em>stations</em>, <em>n=2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.reconstructions_from_stations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only get reconstructions for specific stations for coincidences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidences</strong> – list of coincidence rows.</li>
+<li><strong>stations</strong> – list of station numbers to filter events for.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of filtered reconstructed events for each coincidence.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.events_in_subcluster">
+<code class="descname">events_in_subcluster</code><span class="sig-paren">(</span><em>coincidences</em>, <em>subcluster</em>, <em>n=2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.events_in_subcluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter to only events from stations in a specific subcluster</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidences</strong> – list of events for each coincidence.</li>
+<li><strong>subcluster</strong> – subcluster number to filter events for.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tuples of station numbers and events for matched events.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.coincidence_queries.CoincidenceQuery.events_in_cluster">
+<code class="descname">events_in_cluster</code><span class="sig-paren">(</span><em>coincidences</em>, <em>cluster</em>, <em>n=2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.coincidence_queries.CoincidenceQuery.events_in_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter to only events from stations in a specific subcluster</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidences</strong> – list of events for each coincidence.</li>
+<li><strong>cluster</strong> – cluster number to filter events for.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tuples of station numbers and events for matched events.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="calibration.html"
+                        title="previous chapter">Data timing and signal calibration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="coincidences.html"
+                        title="next chapter">Search for coincidences between HiSPARC stations</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="coincidences.html" title="Search for coincidences between HiSPARC stations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="calibration.html" title="Data timing and signal calibration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../analysis.html" >Data analysis</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,902 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>HiSPARC API &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="HiSPARC clusters" href="clusters.html" />
+    <link rel="prev" title="Time deltas" href="analysis/time_deltas.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="clusters.html" title="HiSPARC clusters"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="analysis/time_deltas.html" title="Time deltas"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="sapphire.html" accesskey="U">SAPPHiRE Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.api">
+<span id="hisparc-api"></span><h1>HiSPARC API<a class="headerlink" href="#module-sapphire.api" title="Permalink to this headline">¶</a></h1>
+<p>Access the HiSPARC public database API.</p>
+<p>This provides easy classes and functions to access the HiSPARC
+publicdb API. This takes care of the url retrieval and conversion
+from JSON to Python dictionaries.</p>
+<p>Example usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sapphire</span> <span class="kn">import</span> <span class="n">Station</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3102</span><span class="p">,</span> <span class="mi">504</span><span class="p">,</span> <span class="mi">7101</span><span class="p">,</span> <span class="mi">8008</span><span class="p">,</span> <span class="mi">13005</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clusters</span> <span class="o">=</span> <span class="p">[</span><span class="n">Station</span><span class="p">(</span><span class="n">station</span><span class="p">)</span><span class="o">.</span><span class="n">cluster</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">station</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stations</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="s1">&#39;Station </span><span class="si">%d</span><span class="s1"> is in cluster </span><span class="si">%s</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">station</span><span class="p">,</span> <span class="n">cluster</span><span class="p">)</span>
+<span class="go">Station 5 is in cluster Amsterdam.</span>
+<span class="go">Station 3102 is in cluster Leiden.</span>
+<span class="go">Station 504 is in cluster Amsterdam.</span>
+<span class="go">Station 7101 is in cluster Enschede.</span>
+<span class="go">Station 8008 is in cluster Eindhoven.</span>
+<span class="go">Station 13005 is in cluster Bristol.</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="sapphire.api.API">
+<em class="property">class </em><code class="descclassname">sapphire.api.</code><code class="descname">API</code><span class="sig-paren">(</span><em>force_fresh=False</em>, <em>force_stale=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.API" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base API class</p>
+<p>This provided the methods to retrieve data from the API. The results
+are converted from JSON data to Python objects (dict/list/etc).
+Support is also provided for the retrieval of Source TSV data, which
+is returned as NumPy arrays.</p>
+<p>Initialize API class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>force_fresh</strong><strong>,</strong><strong>force_stale</strong> – if either of these is set to True the
+data must either loaded from server or from local data. Be default
+fresh data is prefered, but falls back to local data.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="sapphire.api.API.urls">
+<code class="descname">urls</code><em class="property"> = {'clusters': 'clusters/', 'clusters_in_country': 'countries/{country_number}/', 'configuration': 'station/{station_number}/config/{year}/{month}/{day}/', 'countries': 'countries/', 'event_trace': 'station/{station_number}/trace/{ext_timestamp}/', 'has_data': 'station/{station_number}/data/{year}/{month}/{day}/', 'has_weather': 'station/{station_number}/weather/{year}/{month}/{day}/', 'number_of_events': 'station/{station_number}/num_events/{year}/{month}/{day}/{hour}/', 'pulseheight_drift': 'station/{station_number}/plate/{plate_number}/pulseheight/drift/{year}/{month}/{day}/{number_of_days}/', 'pulseheight_fit': 'station/{station_number}/plate/{plate_number}/pulseheight/fit/{year}/{month}/{day}/', 'station_info': 'station/{station_number}/', 'stations': 'stations/', 'stations_in_subcluster': 'subclusters/{subcluster_number}/', 'stations_with_data': 'stations/data/{year}/{month}/{day}/', 'stations_with_weather': 'stations/weather/{year}/{month}/{day}/', 'subclusters': 'subclusters/', 'subclusters_in_cluster': 'clusters/{cluster_number}/'}</em><a class="headerlink" href="#sapphire.api.API.urls" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sapphire.api.API.src_urls">
+<code class="descname">src_urls</code><em class="property"> = {'azimuth': 'azimuth/{station_number}/{year}/{month}/{day}/', 'barometer': 'barometer/{station_number}/{year}/{month}/{day}/', 'coincidencenumber': 'coincidencenumber/{year}/{month}/{day}/', 'coincidencetime': 'coincidencetime/{year}/{month}/{day}/', 'current': 'current/{station_number}/', 'detector_timing_offsets': 'detector_timing_offsets/{station_number}/', 'electronics': 'electronics/{station_number}/', 'eventtime': 'eventtime/{station_number}/{year}/{month}/{day}/', 'gps': 'gps/{station_number}/', 'integral': 'pulseintegral/{station_number}/{year}/{month}/{day}/', 'layout': 'layout/{station_number}/', 'pulseheight': 'pulseheight/{station_number}/{year}/{month}/{day}/', 'station_timing_offsets': 'station_timing_offsets/{station_1}/{station_2}/', 'temperature': 'temperature/{station_number}/{year}/{month}/{day}/', 'trigger': 'trigger/{station_number}/', 'voltage': 'voltage/{station_number}/', 'zenith': 'zenith/{station_number}/{year}/{month}/{day}/'}</em><a class="headerlink" href="#sapphire.api.API.src_urls" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.api.API.check_connection">
+<em class="property">static </em><code class="descname">check_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.API.check_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the API man page URL to test the connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean indicating the internet status</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.api.API.validate_partial_date">
+<em class="property">static </em><code class="descname">validate_partial_date</code><span class="sig-paren">(</span><em>year=''</em>, <em>month=''</em>, <em>day=''</em>, <em>hour=''</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.API.validate_partial_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.api.Network">
+<em class="property">class </em><code class="descclassname">sapphire.api.</code><code class="descname">Network</code><span class="sig-paren">(</span><em>force_fresh=False</em>, <em>force_stale=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get info about the network (countries/clusters/subclusters/stations)</p>
+<p>Initialize API class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>force_fresh</strong><strong>,</strong><strong>force_stale</strong> – if either of these is set to True the
+data must either loaded from server or from local data. Be default
+fresh data is prefered, but falls back to local data.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sapphire.api.Network.countries">
+<code class="descname">countries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.countries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of countries</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">all countries in the region</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.country_numbers">
+<code class="descname">country_numbers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.country_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as countries but only retuns a list of country numbers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.clusters">
+<code class="descname">clusters</code><span class="sig-paren">(</span><em>country=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of clusters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>country</strong> – the number of the country for which to get all
+clusters.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">all clusters in the region</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.cluster_numbers">
+<code class="descname">cluster_numbers</code><span class="sig-paren">(</span><em>country=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.cluster_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as clusters but only retuns a list of cluster numbers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.subclusters">
+<code class="descname">subclusters</code><span class="sig-paren">(</span><em>country=None</em>, <em>cluster=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.subclusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of subclusters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>country</strong><strong>,</strong><strong>cluster</strong> – the number of the region for which to get
+the subclusters it contains, only one or none should
+be specified.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">all subclusters in the region</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.subcluster_numbers">
+<code class="descname">subcluster_numbers</code><span class="sig-paren">(</span><em>country=None</em>, <em>cluster=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.subcluster_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as subclusters but only retuns a list of subcluster numbers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.stations">
+<code class="descname">stations</code><span class="sig-paren">(</span><em>country=None</em>, <em>cluster=None</em>, <em>subcluster=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.stations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of stations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>country</strong><strong>,</strong><strong>cluster</strong><strong>,</strong><strong>subcluster</strong> – the number of the region
+for which to get all stations, only one or none should
+be specified.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">all stations in the region</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.station_numbers">
+<code class="descname">station_numbers</code><span class="sig-paren">(</span><em>country=None</em>, <em>cluster=None</em>, <em>subcluster=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.station_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as stations but only retuns a list of station numbers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.nested_network">
+<code class="descname">nested_network</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.nested_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a nested list of the full network</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.stations_with_data">
+<code class="descname">stations_with_data</code><span class="sig-paren">(</span><em>year=''</em>, <em>month=''</em>, <em>day=''</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.stations_with_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of stations with data on the specified date</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to check. It is
+possible to be less specific.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">all stations with data.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.stations_with_weather">
+<code class="descname">stations_with_weather</code><span class="sig-paren">(</span><em>year=''</em>, <em>month=''</em>, <em>day=''</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.stations_with_weather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of stations with weather data on the specified date</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to check. It is
+possible to be less specific.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">all stations with weather data.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.coincidence_time">
+<code class="descname">coincidence_time</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.coincidence_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coincidences per hour histogram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the histogram.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of bins and counts.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.coincidence_number">
+<code class="descname">coincidence_number</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.coincidence_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of stations in coincidence histogram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the histogram.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of bins and counts.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.api.Network.validate_numbers">
+<em class="property">static </em><code class="descname">validate_numbers</code><span class="sig-paren">(</span><em>country=None</em>, <em>cluster=None</em>, <em>subcluster=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.validate_numbers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Network.uptime">
+<code class="descname">uptime</code><span class="sig-paren">(</span><em>stations</em>, <em>start=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Network.uptime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get number of hours which stations have been simultaneously active</p>
+<p>Using hourly eventrate data the number of hours in which the given
+stations all had data is determined. Only hours in which each station
+had a reasonable eventrate are counted, to exclude bad data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stations</strong> – station number or a list of station numbers.</li>
+<li><strong>start</strong><strong>,</strong><strong>end</strong> – start, end timestamp.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">number of hours with simultaneous data.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.api.Station">
+<em class="property">class </em><code class="descclassname">sapphire.api.</code><code class="descname">Station</code><span class="sig-paren">(</span><em>station</em>, <em>force_fresh=False</em>, <em>force_stale=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access data about a single station</p>
+<p>Initialize station</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>station</strong> – station number.</li>
+<li><strong>force_fresh</strong> – set to True to require data to be fresh
+from the server.</li>
+<li><strong>force_stale</strong> – set to True to require data to be taken from local
+data, not valid for all methods.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="sapphire.api.Station.info">
+<code class="descname">info</code><a class="headerlink" href="#sapphire.api.Station.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get general station info</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.country">
+<code class="descname">country</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.country" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.cluster">
+<code class="descname">cluster</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.cluster" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.subcluster">
+<code class="descname">subcluster</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.subcluster" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.n_detectors">
+<code class="descname">n_detectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.n_detectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of detectors in this station</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.config">
+<code class="descname">config</code><span class="sig-paren">(</span><em>date=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get station config</p>
+<p>Retrieve either the latest, or a config for a specific date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>date</strong> – date object for which to get the config</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the full config for the station</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.n_events">
+<code class="descname">n_events</code><span class="sig-paren">(</span><em>year=''</em>, <em>month=''</em>, <em>day=''</em>, <em>hour=''</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.n_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get number of events</p>
+<p>Note that it is possible to give only the year to get the total
+number of events in that year. If both year and month are given,
+the total events in that month are returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong><strong>,</strong><strong>hour</strong> – the date and time for which to
+get the number. It is possible to be less specific.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the number of events recorded by the station on date.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.has_data">
+<code class="descname">has_data</code><span class="sig-paren">(</span><em>year=''</em>, <em>month=''</em>, <em>day=''</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.has_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for HiSPARC data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to check. It is
+possible to be less specific.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">boolean, indicating wether the station had air shower
+data on the date.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.has_weather">
+<code class="descname">has_weather</code><span class="sig-paren">(</span><em>year=''</em>, <em>month=''</em>, <em>day=''</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.has_weather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for weather data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to check. It is
+possible to be less specific.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">boolean, indicating wether the station had weather data
+on the date.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.event_trace">
+<code class="descname">event_trace</code><span class="sig-paren">(</span><em>timestamp</em>, <em>nanoseconds</em>, <em>raw=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.event_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the traces for a specific event</p>
+<p>The exact timestamp and nanoseconds for the event have to be
+given.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>timestamp</strong><strong>,</strong><strong>nanoseconds</strong> – the extended timestamp for which
+to get the traces.</li>
+<li><strong>raw</strong> – get the raw trace, without the subtracted baselines.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an array with the traces for each detector in ADCcounts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.event_time">
+<code class="descname">event_time</code><span class="sig-paren">(</span><em>year=''</em>, <em>month=''</em>, <em>day=''</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.event_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of events per hour histogram</p>
+<p>If no date is given the full event time histogram for this station
+will be returned. That means for the entire time this station has
+collected data.</p>
+<p>This data (the full histogram) can made available locally using
+the <cite>extend_local_data</cite> command.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the histogram.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of bins and counts.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.pulse_height">
+<code class="descname">pulse_height</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.pulse_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the pulseheight histogram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the histogram.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of bins and counts.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.pulse_integral">
+<code class="descname">pulse_integral</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.pulse_integral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the pulseintegral histogram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the histogram.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of bins and counts.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.azimuth">
+<code class="descname">azimuth</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.azimuth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the azimuth histogram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the histogram.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of bins and counts.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.zenith">
+<code class="descname">zenith</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.zenith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the zenith histogram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the histogram.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of bins and counts.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.barometer">
+<code class="descname">barometer</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.barometer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the barometer dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the dataset.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.temperature">
+<code class="descname">temperature</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the temperature dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>year</strong><strong>,</strong><strong>month</strong><strong>,</strong><strong>day</strong> – the date for which to get the dataset.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sapphire.api.Station.electronics">
+<code class="descname">electronics</code><a class="headerlink" href="#sapphire.api.Station.electronics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the electronics version data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.electronic">
+<code class="descname">electronic</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.electronic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get electronics version data for specific timestamp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp</strong> – timestamp for which the values are valid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of values for given timestamp.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sapphire.api.Station.voltages">
+<code class="descname">voltages</code><a class="headerlink" href="#sapphire.api.Station.voltages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the PMT voltage data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.voltage">
+<code class="descname">voltage</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get PMT voltage data for specific timestamp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp</strong> – timestamp for which the values are valid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of values for given timestamp.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sapphire.api.Station.currents">
+<code class="descname">currents</code><a class="headerlink" href="#sapphire.api.Station.currents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the PMT current data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.current">
+<code class="descname">current</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get PMT current data for specific timestamp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp</strong> – timestamp for which the values are valid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of values for given timestamp.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sapphire.api.Station.gps_locations">
+<code class="descname">gps_locations</code><a class="headerlink" href="#sapphire.api.Station.gps_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the GPS location data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.gps_location">
+<code class="descname">gps_location</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.gps_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get GPS location for specific timestamp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp</strong> – optional timestamp or datetime object for which
+the values are valid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary with the values for given timestamp.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sapphire.api.Station.triggers">
+<code class="descname">triggers</code><a class="headerlink" href="#sapphire.api.Station.triggers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the trigger config data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.trigger">
+<code class="descname">trigger</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get trigger config for specific timestamp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp</strong> – timestamp for which the values are valid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">thresholds and trigger values for given timestamp.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sapphire.api.Station.station_layouts">
+<code class="descname">station_layouts</code><a class="headerlink" href="#sapphire.api.Station.station_layouts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the station layout data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.station_layout">
+<code class="descname">station_layout</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.station_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get station layout data for specific timestamp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp</strong> – timestamp for which the values are valid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of coordinates for given timestamp.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sapphire.api.Station.detector_timing_offsets">
+<code class="descname">detector_timing_offsets</code><a class="headerlink" href="#sapphire.api.Station.detector_timing_offsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the detector timing offsets data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.detector_timing_offset">
+<code class="descname">detector_timing_offset</code><span class="sig-paren">(</span><em>timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.detector_timing_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get detector timing offset data for specific timestamp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp</strong> – timestamp for which the values are valid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of values for given timestamp.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.station_timing_offsets">
+<code class="descname">station_timing_offsets</code><span class="sig-paren">(</span><em>reference_station</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.station_timing_offsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the station timing offset relative to reference_station</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reference_station</strong> – reference station</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of timestamps and values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.api.Station.station_timing_offset">
+<code class="descname">station_timing_offset</code><span class="sig-paren">(</span><em>reference_station</em>, <em>timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.api.Station.station_timing_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get station timing offset data for specific timestamp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>reference_station</strong> – reference station</li>
+<li><strong>timestamp</strong> – timestamp for which the value is valid.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the offset and error for given timestamp.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="analysis/time_deltas.html"
+                        title="previous chapter">Time deltas</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="clusters.html"
+                        title="next chapter">HiSPARC clusters</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="clusters.html" title="HiSPARC clusters"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="analysis/time_deltas.html" title="Time deltas"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="sapphire.html" >SAPPHiRE Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

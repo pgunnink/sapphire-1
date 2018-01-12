@@ -1,0 +1,512 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Reconstruction of EAS core and size &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reconstruction of EAS direction" href="direction_reconstruction.html" />
+    <link rel="prev" title="Search for coincidences between HiSPARC stations" href="coincidences.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="direction_reconstruction.html" title="Reconstruction of EAS direction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="coincidences.html" title="Search for coincidences between HiSPARC stations"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../analysis.html" accesskey="U">Data analysis</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.analysis.core_reconstruction">
+<span id="reconstruction-of-eas-core-and-size"></span><h1>Reconstruction of EAS core and size<a class="headerlink" href="#module-sapphire.analysis.core_reconstruction" title="Permalink to this headline">¶</a></h1>
+<p>Core reconstruction</p>
+<p>This module contains two classes that can be used to reconstruct
+HiSPARC events and coincidences. The classes know how to extract the
+relevant information from the station and event or cluster and
+coincidence. Various algorithms which do the reconstruction are also
+defined here. The algorithms require positions and particle densties to
+do the reconstruction.</p>
+<p>Each algorithm has a <a class="reference internal" href="#sapphire.analysis.core_reconstruction.BaseCoreAlgorithm.reconstruct_common" title="sapphire.analysis.core_reconstruction.BaseCoreAlgorithm.reconstruct_common"><code class="xref py py-meth docutils literal"><span class="pre">reconstruct_common()</span></code></a>
+method which always requires particle denisties, x, and y positions
+and optionally z positions and previous reconstruction results. The
+data is then prepared for the algorithm and passed to
+the <a class="reference internal" href="#sapphire.analysis.core_reconstruction.CenterMassAlgorithm.reconstruct" title="sapphire.analysis.core_reconstruction.CenterMassAlgorithm.reconstruct"><code class="xref py py-meth docutils literal"><span class="pre">reconstruct()</span></code></a> method which returns the
+reconstructed x and y coordinates.</p>
+<dl class="class">
+<dt id="sapphire.analysis.core_reconstruction.EventCoreReconstruction">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.core_reconstruction.</code><code class="descname">EventCoreReconstruction</code><span class="sig-paren">(</span><em>station</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.EventCoreReconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct core for station events</p>
+<p>This class is aware of ‘events’ and ‘stations’.  Initialize this class
+with a ‘station’ and you can reconstruct events using
+<a class="reference internal" href="#sapphire.analysis.core_reconstruction.EventCoreReconstruction.reconstruct_event" title="sapphire.analysis.core_reconstruction.EventCoreReconstruction.reconstruct_event"><code class="xref py py-meth docutils literal"><span class="pre">reconstruct_event()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>station</strong> – <a class="reference internal" href="../clusters.html#sapphire.clusters.Station" title="sapphire.clusters.Station"><code class="xref py py-class docutils literal"><span class="pre">sapphire.clusters.Station</span></code></a> object.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sapphire.analysis.core_reconstruction.EventCoreReconstruction.reconstruct_event">
+<code class="descname">reconstruct_event</code><span class="sig-paren">(</span><em>event</em>, <em>detector_ids=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.EventCoreReconstruction.reconstruct_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct a single event</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>event</strong> – an event (e.g. from an events table), or any
+dictionary-like object containing the keys necessary for
+reconstructing the direction of a shower (e.g. number of mips).</li>
+<li><strong>detector_ids</strong> – list of the detectors to use for
+reconstruction. The detector ids are 0-based, unlike the
+column names in the esd data.</li>
+<li><strong>initial</strong> – dictionary with already reconstructed shower
+parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(x, y) core position in m.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.core_reconstruction.EventCoreReconstruction.reconstruct_events">
+<code class="descname">reconstruct_events</code><span class="sig-paren">(</span><em>events</em>, <em>detector_ids=None</em>, <em>progress=True</em>, <em>initials=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.EventCoreReconstruction.reconstruct_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct events</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>events</strong> – the events table for the station from an ESD data
+file.</li>
+<li><strong>detector_ids</strong> – detectors which use for the reconstructions.</li>
+<li><strong>progress</strong> – if True show a progress bar while reconstructing.</li>
+<li><strong>initials</strong> – list of dictionaries with already reconstructed shower
+parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(x, y) core positions in m.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.core_reconstruction.CoincidenceCoreReconstruction">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.core_reconstruction.</code><code class="descname">CoincidenceCoreReconstruction</code><span class="sig-paren">(</span><em>cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.CoincidenceCoreReconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct core for coincidences</p>
+<p>This class is aware of ‘coincidences’ and ‘clusters’.  Initialize
+this class with a ‘cluster’ and you can reconstruct a coincidence
+using <a class="reference internal" href="#sapphire.analysis.core_reconstruction.CoincidenceCoreReconstruction.reconstruct_coincidence" title="sapphire.analysis.core_reconstruction.CoincidenceCoreReconstruction.reconstruct_coincidence"><code class="xref py py-meth docutils literal"><span class="pre">reconstruct_coincidence()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cluster</strong> – <a class="reference internal" href="../clusters.html#sapphire.clusters.BaseCluster" title="sapphire.clusters.BaseCluster"><code class="xref py py-class docutils literal"><span class="pre">sapphire.clusters.BaseCluster</span></code></a> object.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sapphire.analysis.core_reconstruction.CoincidenceCoreReconstruction.reconstruct_coincidence">
+<code class="descname">reconstruct_coincidence</code><span class="sig-paren">(</span><em>coincidence</em>, <em>station_numbers=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.CoincidenceCoreReconstruction.reconstruct_coincidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct a single coincidence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidence</strong> – a coincidence list consisting of
+multiple (station_number, event) tuples</li>
+<li><strong>station_numbers</strong> – list of station numbers, to only use
+events from those stations.</li>
+<li><strong>initial</strong> – dictionary with already reconstructed shower
+parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(x, y) core position in m.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.core_reconstruction.CoincidenceCoreReconstruction.reconstruct_coincidences">
+<code class="descname">reconstruct_coincidences</code><span class="sig-paren">(</span><em>coincidences</em>, <em>station_numbers=None</em>, <em>progress=True</em>, <em>initials=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.CoincidenceCoreReconstruction.reconstruct_coincidences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct all coincidences</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidences</strong> – a list of coincidences, each consisting of
+multiple (station_number, event) tuples.</li>
+<li><strong>station_numbers</strong> – list of station numbers, to only use
+events from those stations.</li>
+<li><strong>progress</strong> – if True show a progress bar while reconstructing.</li>
+<li><strong>initials</strong> – list of dictionaries with already reconstructed shower
+parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(x, y) core positions in m.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.core_reconstruction.CoincidenceCoreReconstructionDetectors">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.core_reconstruction.</code><code class="descname">CoincidenceCoreReconstructionDetectors</code><span class="sig-paren">(</span><em>cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.CoincidenceCoreReconstructionDetectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct core for coincidences using each detector</p>
+<p>Instead of using the average station particle density this class
+uses the particle density in each detector for the reconstruction.</p>
+<dl class="method">
+<dt id="sapphire.analysis.core_reconstruction.CoincidenceCoreReconstructionDetectors.reconstruct_coincidence">
+<code class="descname">reconstruct_coincidence</code><span class="sig-paren">(</span><em>coincidence</em>, <em>station_numbers=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.CoincidenceCoreReconstructionDetectors.reconstruct_coincidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct a single coincidence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidence</strong> – a coincidence list consisting of
+multiple (station_number, event) tuples</li>
+<li><strong>station_numbers</strong> – list of station numbers, to only use
+events from those stations.</li>
+<li><strong>initial</strong> – dictionary with already reconstructed shower
+parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(x, y) core position in m.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.core_reconstruction.BaseCoreAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.core_reconstruction.</code><code class="descname">BaseCoreAlgorithm</code><a class="headerlink" href="#sapphire.analysis.core_reconstruction.BaseCoreAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>No actual core reconstruction algorithm</p>
+<p>Simply returns (nan, nan) as core.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.core_reconstruction.BaseCoreAlgorithm.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>p</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.BaseCoreAlgorithm.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct core position</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> – detector particle density in m^-2.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detectors in m.</li>
+<li><strong>z</strong> – height of detectors in m.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">reconstructed core position.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.core_reconstruction.BaseCoreAlgorithm.reconstruct">
+<em class="property">static </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.BaseCoreAlgorithm.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct core position</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">reconstructed core position.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.core_reconstruction.CenterMassAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.core_reconstruction.</code><code class="descname">CenterMassAlgorithm</code><a class="headerlink" href="#sapphire.analysis.core_reconstruction.CenterMassAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple core estimator</p>
+<p>Estimates the core by center of mass of the measurements.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.core_reconstruction.CenterMassAlgorithm.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>p</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.CenterMassAlgorithm.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct core position</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> – detector particle density in m^-2.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detectors in m.</li>
+<li><strong>z</strong> – height of detectors is ignored.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">reconstructed core position.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.core_reconstruction.CenterMassAlgorithm.reconstruct">
+<em class="property">static </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><em>p</em>, <em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.CenterMassAlgorithm.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate center of mass</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> – detector particle density in m^-2.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detectors in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">reconstructed core position.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.core_reconstruction.AverageIntersectionAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.core_reconstruction.</code><code class="descname">AverageIntersectionAlgorithm</code><a class="headerlink" href="#sapphire.analysis.core_reconstruction.AverageIntersectionAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Core estimator</p>
+<p>To the densities in 3 stations correspond 2 possible cores. The line
+through these points is quite stable for the lateral distribution function.
+To each combination of 3 stations out of a set of at least 4
+stations hit corresponds a line. To each combinations of 2 lines out of
+the set of lines corresponds a point of intersection (if the 2 lines are
+not collinear). Taking the cloud of intersection points close to the core
+estimated by the center of mass, and averaging the positions in this cloud
+results in an estimation for the core.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.core_reconstruction.AverageIntersectionAlgorithm.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>p</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.AverageIntersectionAlgorithm.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct core</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> – detector particle density in m^-2.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detectors in m.</li>
+<li><strong>z</strong> – height of detectors is ignored.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">reconstructed core position.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.core_reconstruction.AverageIntersectionAlgorithm.select_newlist">
+<em class="property">static </em><code class="descname">select_newlist</code><span class="sig-paren">(</span><em>newx</em>, <em>newy</em>, <em>xpointlist</em>, <em>ypointlist</em>, <em>distance</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.AverageIntersectionAlgorithm.select_newlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select intersection points in square around the mean of old list.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.core_reconstruction.EllipsLdfAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.core_reconstruction.</code><code class="descname">EllipsLdfAlgorithm</code><a class="headerlink" href="#sapphire.analysis.core_reconstruction.EllipsLdfAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple core estimator</p>
+<p>Estimates the core by center of mass of the measurements.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.core_reconstruction.EllipsLdfAlgorithm.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>p</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.EllipsLdfAlgorithm.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct core position</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> – detector particle density in m^-2.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detectors in m.</li>
+<li><strong>z</strong> – height of detectors is ignored.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions: zenith and azimuth.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">reconstructed core position.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.core_reconstruction.EllipsLdfAlgorithm.reconstruct">
+<em class="property">classmethod </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><em>p</em>, <em>x</em>, <em>y</em>, <em>theta</em>, <em>phi</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.EllipsLdfAlgorithm.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct the number of electrons that fits best.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> – detector particle density in m^-2.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detectors in m.</li>
+<li><strong>theta</strong><strong>,</strong><strong>phi</strong> – zenith and azimuth angle in rad.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">reconstructed core position, chi square, and shower size.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.core_reconstruction.EllipsLdfAlgorithm.selectbest">
+<em class="property">static </em><code class="descname">selectbest</code><span class="sig-paren">(</span><em>p</em>, <em>x</em>, <em>y</em>, <em>xstart</em>, <em>ystart</em>, <em>factorbest</em>, <em>chi2best</em>, <em>gridsize</em>, <em>theta</em>, <em>phi</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.core_reconstruction.EllipsLdfAlgorithm.selectbest" title="Permalink to this definition">¶</a></dt>
+<dd><p>selects the best core position in grid around (xstart, ystart).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> – detector particle density in m^-2.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detectors in m.</li>
+<li><strong>xcmass</strong><strong>,</strong><strong>ycmass</strong> – start position of core in m.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="coincidences.html"
+                        title="previous chapter">Search for coincidences between HiSPARC stations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="direction_reconstruction.html"
+                        title="next chapter">Reconstruction of EAS direction</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="direction_reconstruction.html" title="Reconstruction of EAS direction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="coincidences.html" title="Search for coincidences between HiSPARC stations"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../analysis.html" >Data analysis</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,302 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Simulation base classes &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Detector simulations" href="detector.html" />
+    <link rel="prev" title="Simulation of the detection of EAS events" href="../simulations.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="detector.html" title="Detector simulations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../simulations.html" title="Simulation of the detection of EAS events"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../simulations.html" accesskey="U">Simulation of the detection of EAS events</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.simulations.base">
+<span id="simulation-base-classes"></span><h1>Simulation base classes<a class="headerlink" href="#module-sapphire.simulations.base" title="Permalink to this headline">¶</a></h1>
+<p>Perform simulations of air showers on a cluster of stations</p>
+<p>This base class can be subclassed to provide various kinds of
+simulations. These simulations will inherit the base functionallity from
+this class, including the creation of event and coincidence tables to
+store the results, which will look similar to regular HiSPARC data, such
+that the same reconstruction analysis can be applied to both.</p>
+<p>Example usage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tables</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sapphire.simulations.base</span> <span class="k">import</span> <span class="n">BaseSimulation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sapphire</span> <span class="k">import</span> <span class="n">ScienceParkCluster</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;/tmp/test_base_simulation.h5&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cluster</span> <span class="o">=</span> <span class="n">ScienceParkCluster</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">BaseSimulation</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;/simulations/this_run&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="sapphire.simulations.base.BaseSimulation">
+<em class="property">class </em><code class="descclassname">sapphire.simulations.base.</code><code class="descname">BaseSimulation</code><span class="sig-paren">(</span><em>cluster</em>, <em>data</em>, <em>output_path='/'</em>, <em>n=1</em>, <em>seed=None</em>, <em>progress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for simulations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cluster</strong> – <a class="reference internal" href="../clusters.html#sapphire.clusters.BaseCluster" title="sapphire.clusters.BaseCluster"><code class="xref py py-class docutils literal"><span class="pre">BaseCluster</span></code></a> instance.</li>
+<li><strong>data</strong> – writeable PyTables file handle.</li>
+<li><strong>output_path</strong> – path (as string) to the PyTables group (need not
+exist) in which the result tables will be created.</li>
+<li><strong>n</strong> – number of simulations to perform.</li>
+<li><strong>seed</strong> – seed for the pseudo-random number generators.</li>
+<li><strong>progress</strong> – if True show a progressbar while simulating.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the simulations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.generate_shower_parameters">
+<code class="descname">generate_shower_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.generate_shower_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate shower parameters like core position, energy, etc.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.simulate_events_for_shower">
+<code class="descname">simulate_events_for_shower</code><span class="sig-paren">(</span><em>shower_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.simulate_events_for_shower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate station events for a single shower</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.simulate_station_response">
+<code class="descname">simulate_station_response</code><span class="sig-paren">(</span><em>station</em>, <em>shower_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.simulate_station_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate station response to a shower.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.simulate_all_detectors">
+<code class="descname">simulate_all_detectors</code><span class="sig-paren">(</span><em>detectors</em>, <em>shower_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.simulate_all_detectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate response of all detectors in a station.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detectors</strong> – list of detectors</li>
+<li><strong>shower_parameters</strong> – parameters of the shower</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.simulate_detector_response">
+<code class="descname">simulate_detector_response</code><span class="sig-paren">(</span><em>detector</em>, <em>shower_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.simulate_detector_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate detector response to a shower.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>detector</strong> – <a class="reference internal" href="../clusters.html#sapphire.clusters.Detector" title="sapphire.clusters.Detector"><code class="xref py py-class docutils literal"><span class="pre">Detector</span></code></a> instance</li>
+<li><strong>shower_parameters</strong> – shower parameters</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dictionary with keys ‘n’ (number of particles in
+detector) and ‘t’ (time of arrival of first detected particle).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.simulate_trigger">
+<code class="descname">simulate_trigger</code><span class="sig-paren">(</span><em>detector_observables</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.simulate_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate a trigger response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.simulate_gps">
+<code class="descname">simulate_gps</code><span class="sig-paren">(</span><em>station_observables</em>, <em>shower_parameters</em>, <em>station</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.simulate_gps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate gps timestamp.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.process_detector_observables">
+<code class="descname">process_detector_observables</code><span class="sig-paren">(</span><em>detector_observables</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.process_detector_observables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process detector observables for a station.</p>
+<p>The list of detector observables is converted into a dictionary
+containing the familiar observables like pulseheights, n1, n2,
+…, t1, t2, …, integrals, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>detector_observables</strong> – list of observables of the detectors
+making up a station.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary containing the familiar station observables
+like n1, n2, n3, etc.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.store_station_observables">
+<code class="descname">store_station_observables</code><span class="sig-paren">(</span><em>station_id</em>, <em>station_observables</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.store_station_observables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store station observables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>station_id</strong> – the id of the station in self.cluster</li>
+<li><strong>station_observables</strong> – A dictionary containing the
+variables to be stored for this event.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The index (row number) of the newly added event.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.simulations.base.BaseSimulation.store_coincidence">
+<code class="descname">store_coincidence</code><span class="sig-paren">(</span><em>shower_id</em>, <em>shower_parameters</em>, <em>station_events</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.simulations.base.BaseSimulation.store_coincidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store coincidence.</p>
+<p>Store the information to find events of different stations
+belonging to the same simulated shower in the coincidences
+tables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>shower_id</strong> – The shower number for the coincidence id.</li>
+<li><strong>shower_parameters</strong> – A dictionary with the parameters of
+the simulated shower.</li>
+<li><strong>station_events</strong> – A list of tuples containing the
+station_id and event_index referring to the events that
+participated in the coincidence.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../simulations.html"
+                        title="previous chapter">Simulation of the detection of EAS events</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="detector.html"
+                        title="next chapter">Detector simulations</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="detector.html" title="Detector simulations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../simulations.html" title="Simulation of the detection of EAS events"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../simulations.html" >Simulation of the detection of EAS events</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CORSIKA Particles &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CORSIKA on Stoomboot" href="qsub_corsika.html" />
+    <link rel="prev" title="Create an overview of CORSIKA simulations" href="generate_corsika_overview.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="qsub_corsika.html" title="CORSIKA on Stoomboot"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generate_corsika_overview.html" title="Create an overview of CORSIKA simulations"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../corsika.html" accesskey="U">CORSIKA simulations</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.corsika.particles">
+<span id="corsika-particles"></span><h1>CORSIKA Particles<a class="headerlink" href="#module-sapphire.corsika.particles" title="Permalink to this headline">¶</a></h1>
+<p>Use this for particle identification for particles in CORSIKA</p>
+<p>Particle codes as specified in CORSIKA user manual, Table 4.</p>
+<p>This relates to the Description in Particles as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">particle</span> <span class="nb">id</span> <span class="n">x</span> <span class="mi">1000</span> <span class="o">+</span> <span class="n">hadron</span> <span class="n">generation</span> <span class="n">x</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">no</span><span class="o">.</span> <span class="n">of</span> <span class="n">observation</span> <span class="n">level</span>
+</pre></div>
+</div>
+<p>So to find e+/e-:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sapphire.corsika</span> <span class="kn">import</span> <span class="n">particles</span>
+
+<span class="n">particle</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">if</span> <span class="n">particles</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">particle</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;positron&#39;</span><span class="p">,</span> <span class="s1">&#39;electron&#39;</span><span class="p">]:</span>
+    <span class="k">pass</span>
+
+<span class="n">particle</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1206</span>
+<span class="k">if</span> <span class="n">particle</span><span class="o">.</span><span class="n">id</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s1">&#39;atom: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">particles</span><span class="o">.</span><span class="n">ATOMIC_NUMBER</span><span class="p">[</span><span class="n">particle</span><span class="o">.</span><span class="n">id</span> <span class="o">%</span> <span class="mi">100</span><span class="p">]</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="sapphire.corsika.particles.name">
+<code class="descclassname">sapphire.corsika.particles.</code><code class="descname">name</code><span class="sig-paren">(</span><em>particle_id</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.corsika.particles.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the name for a CORSIKA particle code</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>particle_id</strong> – code for the particle</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">name of the particle. In case of atoms the weight is added
+to the name.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.corsika.particles.particle_id">
+<code class="descclassname">sapphire.corsika.particles.</code><code class="descname">particle_id</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.corsika.particles.particle_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the CORSIKA particle code for a partice name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> – name of the particle/atom, for atoms the mass
+(neutrons + protons) can be appended to the name.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">CORSIKA code for the particle.
+For atoms the code is: A x 100 + Z</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generate_corsika_overview.html"
+                        title="previous chapter">Create an overview of CORSIKA simulations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="qsub_corsika.html"
+                        title="next chapter">CORSIKA on Stoomboot</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="qsub_corsika.html" title="CORSIKA on Stoomboot"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generate_corsika_overview.html" title="Create an overview of CORSIKA simulations"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../corsika.html" >CORSIKA simulations</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

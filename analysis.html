@@ -1,0 +1,164 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Data analysis &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data timing and signal calibration" href="analysis/calibration.html" />
+    <link rel="prev" title="SAPPHiRE Reference" href="sapphire.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="analysis/calibration.html" title="Data timing and signal calibration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sapphire.html" title="SAPPHiRE Reference"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="sapphire.html" accesskey="U">SAPPHiRE Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.analysis">
+<span id="data-analysis"></span><h1>Data analysis<a class="headerlink" href="#module-sapphire.analysis" title="Permalink to this headline">¶</a></h1>
+<p>Perform data analysis tasks on HiSPARC data</p>
+<p>This package contains modules for performing various analysis tasks. Most of
+the modules are used for automatic processing and reconstuction of traces,
+events and coincidences and calculation of timing offsets.</p>
+<p>The reconstruction classes from the <a class="reference internal" href="analysis/reconstructions.html#module-sapphire.analysis.reconstructions" title="sapphire.analysis.reconstructions"><code class="xref py py-mod docutils literal"><span class="pre">reconstructions</span></code></a>
+module are often used interactively. Shower reconstructions, both from ESD-
+and simulated data are performed by the classes from
+<a class="reference internal" href="analysis/direction_reconstruction.html#module-sapphire.analysis.direction_reconstruction" title="sapphire.analysis.direction_reconstruction"><code class="xref py py-mod docutils literal"><span class="pre">direction_reconstruction</span></code></a> and
+<a class="reference internal" href="analysis/core_reconstruction.html#module-sapphire.analysis.core_reconstruction" title="sapphire.analysis.core_reconstruction"><code class="xref py py-mod docutils literal"><span class="pre">core_reconstruction</span></code></a> to reconstruct events. But users
+only need to deal with <a class="reference internal" href="analysis/reconstructions.html#module-sapphire.analysis.reconstructions" title="sapphire.analysis.reconstructions"><code class="xref py py-mod docutils literal"><span class="pre">reconstructions</span></code></a>.</p>
+<div class="section" id="modules-in-this-package">
+<h2>Modules in this package:<a class="headerlink" href="#modules-in-this-package" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference internal" href="analysis/calibration.html#module-sapphire.analysis.calibration" title="sapphire.analysis.calibration"><code class="xref py py-mod docutils literal"><span class="pre">calibration</span></code></a></dt>
+<dd>determine calibration values</dd>
+<dt><a class="reference internal" href="analysis/coincidence_queries.html#module-sapphire.analysis.coincidence_queries" title="sapphire.analysis.coincidence_queries"><code class="xref py py-mod docutils literal"><span class="pre">coincidence_queries</span></code></a></dt>
+<dd>filter coincidences analysed with
+<a class="reference internal" href="analysis/coincidences.html#sapphire.analysis.coincidences.CoincidencesESD" title="sapphire.analysis.coincidences.CoincidencesESD"><code class="xref py py-class docutils literal"><span class="pre">CoincidencesESD</span></code></a></dd>
+<dt><a class="reference internal" href="analysis/coincidences.html#module-sapphire.analysis.coincidences" title="sapphire.analysis.coincidences"><code class="xref py py-mod docutils literal"><span class="pre">coincidences</span></code></a></dt>
+<dd>search for coincidences between HiSPARC stations</dd>
+<dt><a class="reference internal" href="analysis/core_reconstruction.html#module-sapphire.analysis.core_reconstruction" title="sapphire.analysis.core_reconstruction"><code class="xref py py-mod docutils literal"><span class="pre">core_reconstruction</span></code></a></dt>
+<dd>shower core and shower size reconstruction</dd>
+<dt><a class="reference internal" href="analysis/direction_reconstruction.html#module-sapphire.analysis.direction_reconstruction" title="sapphire.analysis.direction_reconstruction"><code class="xref py py-mod docutils literal"><span class="pre">direction_reconstruction</span></code></a></dt>
+<dd>EAS direction reconstruction</dd>
+<dt><a class="reference internal" href="analysis/event_utils.html#module-sapphire.analysis.event_utils" title="sapphire.analysis.event_utils"><code class="xref py py-mod docutils literal"><span class="pre">event_utils</span></code></a></dt>
+<dd>get data from processed events</dd>
+<dt><a class="reference internal" href="analysis/find_mpv.html#module-sapphire.analysis.find_mpv" title="sapphire.analysis.find_mpv"><code class="xref py py-mod docutils literal"><span class="pre">find_mpv</span></code></a></dt>
+<dd>find the MIP peak MPV in pulseintegral data</dd>
+<dt><a class="reference internal" href="analysis/landau.html#module-sapphire.analysis.landau" title="sapphire.analysis.landau"><code class="xref py py-mod docutils literal"><span class="pre">landau</span></code></a></dt>
+<dd>Landau distribution</dd>
+<dt><a class="reference internal" href="analysis/process_events.html#module-sapphire.analysis.process_events" title="sapphire.analysis.process_events"><code class="xref py py-mod docutils literal"><span class="pre">process_events</span></code></a></dt>
+<dd>process HiSPARC events</dd>
+<dt><a class="reference internal" href="analysis/process_traces.html#module-sapphire.analysis.process_traces" title="sapphire.analysis.process_traces"><code class="xref py py-mod docutils literal"><span class="pre">process_traces</span></code></a></dt>
+<dd>process HiSPARC traces</dd>
+<dt><a class="reference internal" href="analysis/reconstructions.html#module-sapphire.analysis.reconstructions" title="sapphire.analysis.reconstructions"><code class="xref py py-mod docutils literal"><span class="pre">reconstructions</span></code></a></dt>
+<dd>perform shower reconstructions</dd>
+<dt><a class="reference internal" href="analysis/time_deltas.html#module-sapphire.analysis.time_deltas" title="sapphire.analysis.time_deltas"><code class="xref py py-mod docutils literal"><span class="pre">time_deltas</span></code></a></dt>
+<dd>determine time deltas for station pairs</dd>
+</dl>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/header.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data analysis</a><ul>
+<li><a class="reference internal" href="#modules-in-this-package">Modules in this package:</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="sapphire.html"
+                        title="previous chapter">SAPPHiRE Reference</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="analysis/calibration.html"
+                        title="next chapter">Data timing and signal calibration</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="analysis/calibration.html" title="Data timing and signal calibration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sapphire.html" title="SAPPHiRE Reference"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="sapphire.html" >SAPPHiRE Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

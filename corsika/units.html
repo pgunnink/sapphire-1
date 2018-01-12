@@ -1,0 +1,159 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CORSIKA Units &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Updating and extending local data" href="../data.html" />
+    <link rel="prev" title="Store CORSIKA data as HDF5" href="store_corsika_data.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../data.html" title="Updating and extending local data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="store_corsika_data.html" title="Store CORSIKA data as HDF5"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../corsika.html" accesskey="U">CORSIKA simulations</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.corsika.units">
+<span id="corsika-units"></span><h1>CORSIKA Units<a class="headerlink" href="#module-sapphire.corsika.units" title="Permalink to this headline">¶</a></h1>
+<p>Defines units in terms of HiSPARC standard units</p>
+<p>You should use the units defined in this file whenever you
+have a dimensional quantity in your code.  For example:</p>
+<p>Do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distance</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">km</span>
+</pre></div>
+</div>
+<p>Don’t:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distance</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># don&#39;t forget this is in km!</span>
+</pre></div>
+</div>
+<p>The conversion factors defined in this file convert your data into
+HiSPARC base units, so that all dimensional quantities in the code are
+in a single system of units!  You can also use the conversions defined
+here to, for example, display data with the unit of your choice.  For
+example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s2">&quot;distance = </span><span class="si">%f</span><span class="s2"> mm&quot;</span> <span class="o">%</span>  <span class="n">distance</span> <span class="o">/</span> <span class="n">mm</span>
+<span class="go">1500000 mm</span>
+</pre></div>
+</div>
+<p>The base units are:</p>
+<ul class="simple">
+<li>meter (meter)</li>
+<li>nanosecond (nanosecond)</li>
+<li>electron Volt (eV)</li>
+<li>positron charge (eplus)</li>
+<li>degree Kelvin (kelvin)</li>
+<li>the amount of substance (mole)</li>
+<li>luminous intensity (candela)</li>
+<li>radian (radian)</li>
+<li>steradian (steradian)</li>
+</ul>
+<p>The SI numerical value of the positron charge is defined here,
+as it is needed for conversion factor: positron charge = eSI (coulomb)</p>
+<p>This is a slightly modified version of the units definitions
+written by the Geant4 collaboration.</p>
+<p>Authors:</p>
+<ul class="simple">
+<li>M Maire</li>
+<li>S Giani</li>
+<li>T Paul (modifications for Auger)</li>
+<li>Arne de Laat &lt;<a class="reference external" href="mailto:adelaat&#37;&#52;&#48;nikhef&#46;nl">adelaat<span>&#64;</span>nikhef<span>&#46;</span>nl</a>&gt;</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="store_corsika_data.html"
+                        title="previous chapter">Store CORSIKA data as HDF5</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../data.html"
+                        title="next chapter">Updating and extending local data</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../data.html" title="Updating and extending local data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="store_corsika_data.html" title="Store CORSIKA data as HDF5"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../corsika.html" >CORSIKA simulations</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

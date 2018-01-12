@@ -1,0 +1,1046 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Reconstruction of EAS direction &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Get signal and timing values from events" href="event_utils.html" />
+    <link rel="prev" title="Reconstruction of EAS core and size" href="core_reconstruction.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="event_utils.html" title="Get signal and timing values from events"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="core_reconstruction.html" title="Reconstruction of EAS core and size"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../analysis.html" accesskey="U">Data analysis</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.analysis.direction_reconstruction">
+<span id="reconstruction-of-eas-direction"></span><h1>Reconstruction of EAS direction<a class="headerlink" href="#module-sapphire.analysis.direction_reconstruction" title="Permalink to this headline">¶</a></h1>
+<p>Direction reconstruction</p>
+<p>This module contains two classes that can be used to reconstruct
+HiSPARC events and coincidences. The classes know how to extract the
+relevant information from the station and event or cluster and
+coincidence. Various algorithms which do the reconstruction are also
+defined here. The algorithms require positions and arrival times to
+do the reconstruction.</p>
+<p>Each algorithm has a <a class="reference internal" href="#sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm.reconstruct_common" title="sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm.reconstruct_common"><code class="xref py py-meth docutils literal"><span class="pre">reconstruct_common()</span></code></a>
+method which always requires arrival times, x, and y positions and
+optionally z positions and previous reconstruction results. The data
+is then prepared for the algorithm and passed to
+the <a class="reference internal" href="#sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm.reconstruct" title="sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm.reconstruct"><code class="xref py py-meth docutils literal"><span class="pre">reconstruct()</span></code></a> method which returns the
+reconstructed theta and phi coordinates.</p>
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.EventDirectionReconstruction">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">EventDirectionReconstruction</code><span class="sig-paren">(</span><em>station</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.EventDirectionReconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct direction for station events</p>
+<p>This class is aware of ‘events’ and ‘stations’.  Initialize this class
+with a ‘station’ and you can reconstruct events using
+<a class="reference internal" href="#sapphire.analysis.direction_reconstruction.EventDirectionReconstruction.reconstruct_event" title="sapphire.analysis.direction_reconstruction.EventDirectionReconstruction.reconstruct_event"><code class="xref py py-meth docutils literal"><span class="pre">reconstruct_event()</span></code></a>. To use other algorithms overwrite the
+<code class="docutils literal"><span class="pre">direct</span></code> and <code class="docutils literal"><span class="pre">fit</span></code> attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>station</strong> – <a class="reference internal" href="../clusters.html#sapphire.clusters.Station" title="sapphire.clusters.Station"><code class="xref py py-class docutils literal"><span class="pre">sapphire.clusters.Station</span></code></a> object.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.EventDirectionReconstruction.reconstruct_event">
+<code class="descname">reconstruct_event</code><span class="sig-paren">(</span><em>event, detector_ids=None, offsets=[0.0, 0.0, 0.0, 0.0], initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.EventDirectionReconstruction.reconstruct_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct a single event</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>event</strong> – an event (e.g. from an events table), or any
+dictionary-like object containing the keys necessary for
+reconstructing the direction of a shower (e.g. arrival times).</li>
+<li><strong>detector_ids</strong> – list of the detectors to use for
+reconstruction. The detector ids are 0-based, unlike the
+column names in the esd data.</li>
+<li><strong>offsets</strong> – time offsets for each detector or a
+<a class="reference internal" href="../api.html#sapphire.api.Station" title="sapphire.api.Station"><code class="xref py py-class docutils literal"><span class="pre">Station</span></code></a> object.</li>
+<li><strong>initial</strong> – dictionary with already fitted shower parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta, phi, and detector ids.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.EventDirectionReconstruction.reconstruct_events">
+<code class="descname">reconstruct_events</code><span class="sig-paren">(</span><em>events, detector_ids=None, offsets=[0.0, 0.0, 0.0, 0.0], progress=True, initials=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.EventDirectionReconstruction.reconstruct_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct events</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>events</strong> – the events table for the station from an ESD data file.</li>
+<li><strong>detector_ids</strong> – detectors to use for the reconstructions.</li>
+<li><strong>offsets</strong> – time offsets for each detector or a
+<a class="reference internal" href="../api.html#sapphire.api.Station" title="sapphire.api.Station"><code class="xref py py-class docutils literal"><span class="pre">Station</span></code></a> object.</li>
+<li><strong>progress</strong> – if True show a progress bar while reconstructing.</li>
+<li><strong>initials</strong> – list of dictionaries with already reconstructed shower
+parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of theta, phi, and detector ids.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">CoincidenceDirectionReconstruction</code><span class="sig-paren">(</span><em>cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct direction for coincidences</p>
+<p>This class is aware of ‘coincidences’ and ‘clusters’.  Initialize
+this class with a ‘cluster’ and you can reconstruct a coincidence
+using <a class="reference internal" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.reconstruct_coincidence" title="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.reconstruct_coincidence"><code class="xref py py-meth docutils literal"><span class="pre">reconstruct_coincidence()</span></code></a>. To use other algorithms
+overwrite the <code class="docutils literal"><span class="pre">direct</span></code>,``fit``, and <code class="docutils literal"><span class="pre">curved</span></code> attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cluster</strong> – <a class="reference internal" href="../clusters.html#sapphire.clusters.BaseCluster" title="sapphire.clusters.BaseCluster"><code class="xref py py-class docutils literal"><span class="pre">BaseCluster</span></code></a> object.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.reconstruct_coincidence">
+<code class="descname">reconstruct_coincidence</code><span class="sig-paren">(</span><em>coincidence_events</em>, <em>station_numbers=None</em>, <em>offsets=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.reconstruct_coincidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct a single coincidence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidence_events</strong> – a coincidence list consisting of three
+or more (station_number, event) tuples.</li>
+<li><strong>station_numbers</strong> – list of station numbers, to only use
+events from those stations.</li>
+<li><strong>offsets</strong> – a dictionary of either lists of detector timing
+offsets or <a class="reference internal" href="../api.html#sapphire.api.Station" title="sapphire.api.Station"><code class="xref py py-class docutils literal"><span class="pre">Station</span></code></a> objects for each station.</li>
+<li><strong>initial</strong> – dictionary with already fitted shower parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of theta, phi, and station numbers.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.reconstruct_coincidences">
+<code class="descname">reconstruct_coincidences</code><span class="sig-paren">(</span><em>coincidences</em>, <em>station_numbers=None</em>, <em>offsets=None</em>, <em>progress=True</em>, <em>initials=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.reconstruct_coincidences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct all coincidences</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidences</strong> – a list of coincidence events, each consisting
+of three or more (station_number, event) tuples.</li>
+<li><strong>station_numbers</strong> – list of station numbers, to only use
+events from those stations.</li>
+<li><strong>offsets</strong> – dictionary with detector offsets for each station.
+These detector offsets should be relative to one
+detector from a specific station.</li>
+<li><strong>progress</strong> – if True show a progress bar while reconstructing.</li>
+<li><strong>initials</strong> – list of dictionaries with already reconstructed shower
+parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of theta, phi, and station numbers.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.get_station_offsets">
+<code class="descname">get_station_offsets</code><span class="sig-paren">(</span><em>coincidence_events</em>, <em>station_numbers</em>, <em>offsets</em>, <em>ts0</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.get_station_offsets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.determine_best_offsets">
+<code class="descname">determine_best_offsets</code><span class="sig-paren">(</span><em>station_numbers</em>, <em>midnight_ts</em>, <em>offsets</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.determine_best_offsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine best combined station and detector offsets</p>
+<p>Check which station is best used as reference. Allow offsets via
+other stations, intermediate stations are used if it reduces the
+offset error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>station_numbers</strong> – list of stations in the coincidence or also
+other stations can are allow to be the
+reference station.</li>
+<li><strong>midnight_ts</strong> – timestamp of midnight before the coincidence.</li>
+<li><strong>offsets</strong> – a dictionary of <a class="reference internal" href="../api.html#sapphire.api.Station" title="sapphire.api.Station"><code class="xref py py-class docutils literal"><span class="pre">Station</span></code></a> objects
+for each station.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">combined detector and station offsets for given station,
+relative to the reference station.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.determine_best_reference">
+<code class="descname">determine_best_reference</code><span class="sig-paren">(</span><em>error_matrix</em>, <em>station_numbers</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstruction.determine_best_reference" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstructionDetectors">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">CoincidenceDirectionReconstructionDetectors</code><span class="sig-paren">(</span><em>cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstructionDetectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct direction for coincidences using each detector</p>
+<p>Instead of only the first arrival time per station this class
+uses the arrival time in each detector for the reconstruction.</p>
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstructionDetectors.reconstruct_coincidence">
+<code class="descname">reconstruct_coincidence</code><span class="sig-paren">(</span><em>coincidence_events</em>, <em>station_numbers=None</em>, <em>offsets=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CoincidenceDirectionReconstructionDetectors.reconstruct_coincidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct a single coincidence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coincidence_events</strong> – a coincidence list consisting of one
+or more (station_number, event) tuples.</li>
+<li><strong>station_numbers</strong> – list of station numbers, to only use
+events from those stations.</li>
+<li><strong>offsets</strong> – dictionary with detector offsets for each station.
+These detector offsets should be relative to one
+detector from a specific station.</li>
+<li><strong>initial</strong> – dictionary with already fitted shower parameters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of theta, phi, and station numbers.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">BaseDirectionAlgorithm</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>No actual direction reconstruction algorithm</p>
+<p>Simply returns (nan, nan) as direction.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct shower angles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> – detector arrival time in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detectors in m.</li>
+<li><strong>z</strong> – height of detectors in m.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">reconstructed theta and phi angles.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm.reconstruct">
+<em class="property">static </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.BaseDirectionAlgorithm.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct shower angles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">reconstructed theta and phi angles.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">DirectAlgorithm</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles using direct analytical formula.</p>
+<p>This implements the equations derived in Fokkema2012 sec 4.2.
+(DOI: 10.3990/1.9789036534383)</p>
+<p>This algorithm assumes each detector is at the same altitude.</p>
+<p>Note! The detectors are 0-based.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 detections</p>
+<p>This function converts the coordinates to be suitable for the
+algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> – arrival times in detector 0, 1 and 2 in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detector 0, 1 and 2 in m.</li>
+<li><strong>z</strong> – height of detectors 0, 1 and 2 is ignored.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions is ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm.reconstruct">
+<em class="property">classmethod </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><em>dt1</em>, <em>dt2</em>, <em>r1</em>, <em>r2</em>, <em>phi1</em>, <em>phi2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 detections</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dt#</strong> – arrival times in detector 1 and 2 relative to
+detector 0 in ns (!).</li>
+<li><strong>r#</strong><strong>,</strong><strong>phi#</strong> – position of detector 1 and 2 relative to
+detector 0 in m and radians.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta as given by Fokkema2012 eq 4.14,
+phi as given by Fokkema2012 eq 4.13.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm.rel_theta1_errorsq">
+<em class="property">classmethod </em><code class="descname">rel_theta1_errorsq</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em>, <em>phi1</em>, <em>phi2</em>, <em>r1=10</em>, <em>r2=10</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm.rel_theta1_errorsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fokkema2012, eq 4.23</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm.rel_theta2_errorsq">
+<em class="property">classmethod </em><code class="descname">rel_theta2_errorsq</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em>, <em>phi1</em>, <em>phi2</em>, <em>r1=10</em>, <em>r2=10</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm.rel_theta2_errorsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fokkema2012, eq 4.23</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm.rel_phi_errorsq">
+<em class="property">static </em><code class="descname">rel_phi_errorsq</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em>, <em>phi1</em>, <em>phi2</em>, <em>r1=10</em>, <em>r2=10</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm.rel_phi_errorsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fokkema2012, eq 4.22</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm.dphi_dt0">
+<em class="property">classmethod </em><code class="descname">dphi_dt0</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em>, <em>phi1</em>, <em>phi2</em>, <em>r1=10</em>, <em>r2=10</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm.dphi_dt0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fokkema2012, eq 4.19</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm.dphi_dt1">
+<em class="property">static </em><code class="descname">dphi_dt1</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em>, <em>phi1</em>, <em>phi2</em>, <em>r1=10</em>, <em>r2=10</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm.dphi_dt1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fokkema2012, eq 4.20</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithm.dphi_dt2">
+<em class="property">static </em><code class="descname">dphi_dt2</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em>, <em>phi1</em>, <em>phi2</em>, <em>r1=10</em>, <em>r2=10</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithm.dphi_dt2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fokkema2012, eq 4.21</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">DirectAlgorithmCartesian</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles using direct analytical formula.</p>
+<p>This implements the equations derived in Montanus2014.
+“Direction reconstruction of cosmic air showers with
+detectorstations at different altitudes”</p>
+<p>Here the 2D version is used, assuming each detector is at the same
+altitude.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 detections</p>
+<p>This function converts the coordinates to be suitable for the
+algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> – arrival times in detector 0, 1 and 2 in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of detector 0, 1 and 2 in m.</li>
+<li><strong>z</strong> – height of detectors 0, 1 and 2 is ignored.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions is ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian.reconstruct">
+<em class="property">static </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><em>dt1</em>, <em>dt2</em>, <em>dx1</em>, <em>dx2</em>, <em>dy1</em>, <em>dy2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 detections</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dt#</strong> – arrival times in detector 1 and 2 relative to
+detector 0 in ns.</li>
+<li><strong>dx#</strong><strong>,</strong><strong>dy#</strong> – position of detector 1 and 2 relative to
+detector 0 in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta as given by Montanus2014 eq 27,
+phi as given by Montanus2014 eq 26.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian3D">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">DirectAlgorithmCartesian3D</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles using direct analytical formula.</p>
+<p>This implements the equations derived in Montanus2014.
+“Direction reconstruction of cosmic air showers with
+detectorstations at different altitudes”</p>
+<p>Here the 3D version is used, assuming each detector is at the same
+altitude.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian3D.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian3D.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 detections</p>
+<p>This function converts the coordinates to be suitable for the
+algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> – arrival times in detector 0, 1 and 2 in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of detector 0, 1 and 2 in m.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions is ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian3D.reconstruct">
+<em class="property">static </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><em>dt1</em>, <em>dt2</em>, <em>dx1</em>, <em>dx2</em>, <em>dy1</em>, <em>dy2</em>, <em>dz1=0</em>, <em>dz2=0</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.DirectAlgorithmCartesian3D.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 detections</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dt#</strong> – arrival times in detector 1 and 2 relative to
+detector 0 in ns.</li>
+<li><strong>dx#</strong><strong>,</strong><strong>dy#</strong><strong>,</strong><strong>dz#</strong> – position of detector 1 and 2 relative to
+detector 0 in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta as given by Montanus2014 eq 24,
+phi as given by Montanus2014 eq 22.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.SphereAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">SphereAlgorithm</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.SphereAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct the direction in equatorial coordinates</p>
+<p>Note: currently incompatible with the other algorithms!</p>
+<p>This class uses a different coordinate systems than the other
+algorithms. The location input is in ECEF coordinates and a
+timestamp is required to connect the direction to the equatorial
+coordinates.</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.SphereAlgorithm.reconstruct_equatorial">
+<em class="property">classmethod </em><code class="descname">reconstruct_equatorial</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z</em>, <em>timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.SphereAlgorithm.reconstruct_equatorial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstructs the source in the Equatorial Coordinate System.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> – An array with three arrival times in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – arrays with the ECEF locations of the
+three detectors / stations in meters.</li>
+<li><strong>timestamp</strong> – The UTC timestamp of the coincidence in s.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">declination and right ascension of the source. The
+apparent location of the cosmic ray source in the
+Equatorial Coordinate System.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.SphereAlgorithm.interaction_curve">
+<em class="property">static </em><code class="descname">interaction_curve</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em>, <em>t</em>, <em>t_int</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.SphereAlgorithm.interaction_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the curve of possible primary interactions</p>
+<p>This uses the arrival times in three detectors. The algorithm is
+based on location calculations used for LORAN, DECCA, RACAL, GPS
+as described by N.G. Schultheiss 2012</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – arrays with the orthogonal coordinates of the three
+detection points in m.</li>
+<li><strong>t</strong> – arrival times of the detectors in ns.</li>
+<li><strong>t_int</strong> – interaction time in ns.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">parameters x_int, y_int, z_int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.FitAlgorithm3D">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">FitAlgorithm3D</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.FitAlgorithm3D" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.FitAlgorithm3D.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.FitAlgorithm3D.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 or more detections</p>
+<p>This function converts the arguments to be suitable for the
+algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> – arrival times of the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m. The height
+for all detectors will be set to 0 if not given.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions is ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.FitAlgorithm3D.reconstruct">
+<em class="property">classmethod </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.FitAlgorithm3D.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles for many detections</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t#</strong> – arrival times in the detectors in ns.</li>
+<li><strong>x#</strong><strong>,</strong><strong>y#</strong><strong>,</strong><strong>z#</strong> – position of the detectors in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta as given by Montanus2014 eq 21,
+phi as given by Montanus2014 eq 22.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.FitAlgorithm3D.constraint_normal_vector">
+<em class="property">static </em><code class="descname">constraint_normal_vector</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.FitAlgorithm3D.constraint_normal_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>This should be equal to zero</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sapphire.analysis.direction_reconstruction.FitAlgorithm3D.best_fit">
+<em class="property">static </em><code class="descname">best_fit</code><span class="sig-paren">(</span><em>n_xyz</em>, <em>dt</em>, <em>dx</em>, <em>dy</em>, <em>dz</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.FitAlgorithm3D.best_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function to be minimized to find the direction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_xyz</strong> – list containing the unit vector.</li>
+<li><strong>dt</strong> – list of relative arrival times in the detectors in ns.</li>
+<li><strong>dx</strong><strong>,</strong><strong>dy</strong><strong>,</strong><strong>dz</strong> – list of relative detector positions in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">least sum of squares as in Montanus2014, eq 36</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.RegressionAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">RegressionAlgorithm</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.RegressionAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles using an analytical regression formula.</p>
+<p>This implements the equations as for ISVHECRI (Montanus 2014).
+“Direction reconstruction of cosmic air showers with
+three or more detectorstations in a horizontal (for the
+moment) plane”</p>
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.RegressionAlgorithm.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.RegressionAlgorithm.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 or more detections</p>
+<p>This function converts the arguments to be suitable for the
+algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> – arrival times of the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m. The height
+is ignored.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions is ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.RegressionAlgorithm.reconstruct">
+<em class="property">classmethod </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.RegressionAlgorithm.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles for many detections</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> – arrival times in the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of the detectors in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta as derived by Montanus2014,
+phi as derived by Montanus2014.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.RegressionAlgorithm3D">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">RegressionAlgorithm3D</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.RegressionAlgorithm3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles by iteratively applying a regression formula.</p>
+<p>This implements the equations as recently derived (Montanus 2014).
+“Direction reconstruction of cosmic air showers with
+three or more detectorstations at arbitrary altitudes”</p>
+<dl class="attribute">
+<dt id="sapphire.analysis.direction_reconstruction.RegressionAlgorithm3D.MAX_ITERATIONS">
+<code class="descname">MAX_ITERATIONS</code><em class="property"> = 1000</em><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.RegressionAlgorithm3D.MAX_ITERATIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.RegressionAlgorithm3D.reconstruct_common">
+<em class="property">classmethod </em><code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.RegressionAlgorithm3D.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 or more detections</p>
+<p>This function converts the arguments to be suitable for the
+algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> – arrival times of the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m. The height
+for all detectors will be set to 0 if not given.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions is ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.RegressionAlgorithm3D.reconstruct">
+<em class="property">classmethod </em><code class="descname">reconstruct</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.RegressionAlgorithm3D.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles for many detections</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> – arrival times in the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta as derived by Montanus2014,
+phi as derived by Montanus2014.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedMixin">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">CurvedMixin</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide methods to estimate the time delay due to front curvature</p>
+<p>Given a core location, detector position, and shower angle the radial core
+distance can be determined, which can be used to determine the expected
+time delay.</p>
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedMixin.time_delay">
+<code class="descname">time_delay</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>core_x</em>, <em>core_y</em>, <em>theta</em>, <em>phi</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedMixin.time_delay" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedMixin.radial_core_distance">
+<em class="property">classmethod </em><code class="descname">radial_core_distance</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>core_x</em>, <em>core_y</em>, <em>theta</em>, <em>phi</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedMixin.radial_core_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the radial core distance</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m.</li>
+<li><strong>core_x</strong><strong>,</strong><strong>core_y</strong> – core position at z = 0 in m.</li>
+<li><strong>theta</strong><strong>,</strong><strong>phi</strong> – reconstructed shower direction.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">radial core distance in m.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">CurvedRegressionAlgorithm</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles taking the shower front curvature into account.</p>
+<p>Take the shower front curvature into account. Assumes knowledge about the
+shower core position.</p>
+<dl class="attribute">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm.MAX_ITERATIONS">
+<code class="descname">MAX_ITERATIONS</code><em class="property"> = 1000</em><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm.MAX_ITERATIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm.reconstruct_common">
+<code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 or more detections</p>
+<p>This function converts the arguments to be suitable for the
+algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> – arrival times of the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m.  The height
+is ignored.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions, including core position.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm.reconstruct">
+<code class="descname">reconstruct</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>core_x</em>, <em>core_y</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles for many detections</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> – arrival times in the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong> – positions of the detectors in m.</li>
+<li><strong>core_x</strong><strong>,</strong><strong>core_y</strong> – core position at z = 0 in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta as derived by Montanus2014,
+phi as derived by Montanus2014.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm3D">
+<em class="property">class </em><code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">CurvedRegressionAlgorithm3D</code><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles accounting for front curvature and detector altitudes</p>
+<p>Take the shower front curvature and different detector heights into
+account. Assumes knowledge about the shower core position.</p>
+<dl class="attribute">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm3D.MAX_ITERATIONS">
+<code class="descname">MAX_ITERATIONS</code><em class="property"> = 1000</em><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm3D.MAX_ITERATIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm3D.reconstruct_common">
+<code class="descname">reconstruct_common</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z=None</em>, <em>initial=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm3D.reconstruct_common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles from 3 or more detections</p>
+<p>This function converts the arguments to be suitable for the
+algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t</strong> – arrival times of the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m. The height
+for all detectors will be set to 0 if not given.</li>
+<li><strong>initial</strong> – dictionary containing values from previous
+reconstructions, including core position.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm3D.reconstruct">
+<code class="descname">reconstruct</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z</em>, <em>core_x</em>, <em>core_y</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.CurvedRegressionAlgorithm3D.reconstruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct angles for many detections</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> – arrival times in the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m.</li>
+<li><strong>core_x</strong><strong>,</strong><strong>core_y</strong> – core position at z = 0 in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta as derived by Montanus2014,
+phi as derived by Montanus2014.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.analysis.direction_reconstruction.logic_checks">
+<code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">logic_checks</code><span class="sig-paren">(</span><em>t</em>, <em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.logic_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for impossible reconstructions</p>
+<p>Criteria:</p>
+<ul class="simple">
+<li>No two detectors are at the same position.</li>
+<li>Time difference between two detections should be less than distance / c.</li>
+<li>All detectors on a line is bad.</li>
+</ul>
+<p>To fix:</p>
+<ul class="simple">
+<li>Time difference can still be to large in cases where a different
+distance becomes relevant.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> – arrival times in the detectors in ns.</li>
+<li><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – positions of the detectors in m.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True if the checks pass, False otherwise.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.analysis.direction_reconstruction.warning_only_three">
+<code class="descclassname">sapphire.analysis.direction_reconstruction.</code><code class="descname">warning_only_three</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.analysis.direction_reconstruction.warning_only_three" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="core_reconstruction.html"
+                        title="previous chapter">Reconstruction of EAS core and size</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="event_utils.html"
+                        title="next chapter">Get signal and timing values from events</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="event_utils.html" title="Get signal and timing values from events"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="core_reconstruction.html" title="Reconstruction of EAS core and size"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sapphire.html" >SAPPHiRE Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../analysis.html" >Data analysis</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>

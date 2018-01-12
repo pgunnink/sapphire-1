@@ -1,0 +1,292 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Common utility functions &#8212; SAPPHiRE 1.5.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/hisparc_style.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Transformations between geographic coordinate systems" href="transformations/geographic.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="transformations/geographic.html" title="Transformations between geographic coordinate systems"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="sapphire.html" accesskey="U">SAPPHiRE Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-sapphire.utils">
+<span id="common-utility-functions"></span><h1>Common utility functions<a class="headerlink" href="#module-sapphire.utils" title="Permalink to this headline">¶</a></h1>
+<p>Utilities</p>
+<p>The module contains some commonly functions and classes.</p>
+<dl class="data">
+<dt id="sapphire.utils.ERR">
+<code class="descclassname">sapphire.utils.</code><code class="descname">ERR</code><em class="property"> = [-1, -999]</em><a class="headerlink" href="#sapphire.utils.ERR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error values used to indicate missing or bad data.
+Code -999 is used if the reconstruction of a quantity failed.
+Code -1 is used if that detector/sensor is not present.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="sapphire.utils.c">
+<code class="descclassname">sapphire.utils.</code><code class="descname">c</code><em class="property"> = 0.299792458</em><a class="headerlink" href="#sapphire.utils.c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Speed of light in vacuum in m / ns.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.pbar">
+<code class="descclassname">sapphire.utils.</code><code class="descname">pbar</code><span class="sig-paren">(</span><em>iterable</em>, <em>length=None</em>, <em>show=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.pbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a new progressbar with our default widgets</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>iterable</strong> – the iterable over which will be looped.</li>
+<li><strong>length</strong> – in case iterable is a generator, this should be its
+expected length.</li>
+<li><strong>show</strong> – boolean, if False simply return the iterable.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a new iterable which iterates over the same elements as
+the input, but shows a progressbar if possible.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.ceil_in_base">
+<code class="descclassname">sapphire.utils.</code><code class="descname">ceil_in_base</code><span class="sig-paren">(</span><em>value</em>, <em>base</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.ceil_in_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get nearest multiple of base above the value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.floor_in_base">
+<code class="descclassname">sapphire.utils.</code><code class="descname">floor_in_base</code><span class="sig-paren">(</span><em>value</em>, <em>base</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.floor_in_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get nearest multiple of base below the value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.round_in_base">
+<code class="descclassname">sapphire.utils.</code><code class="descname">round_in_base</code><span class="sig-paren">(</span><em>value</em>, <em>base</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.round_in_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get nearest multiple of base to the value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.closest_in_list">
+<code class="descclassname">sapphire.utils.</code><code class="descname">closest_in_list</code><span class="sig-paren">(</span><em>value</em>, <em>items</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.closest_in_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get nearest item from a list of items to the value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.get_active_index">
+<code class="descclassname">sapphire.utils.</code><code class="descname">get_active_index</code><span class="sig-paren">(</span><em>values</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.get_active_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the index where the value fits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>values</strong> – sorted list of values (e.g. list of timestamps).</li>
+<li><strong>value</strong> – value for which to find the position (e.g. a timestamp).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">index into the values list.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.gauss">
+<code class="descclassname">sapphire.utils.</code><code class="descname">gauss</code><span class="sig-paren">(</span><em>x</em>, <em>n</em>, <em>mu</em>, <em>sigma</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.gauss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gaussian distribution</p>
+<p>To be used for fitting where the integral is not 1.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.norm_angle">
+<code class="descclassname">sapphire.utils.</code><code class="descname">norm_angle</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.norm_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize an angle to the range [-pi, pi)</p>
+<p>We use the range from -pi upto but not including pi to represent
+angles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.angle_between">
+<code class="descclassname">sapphire.utils.</code><code class="descname">angle_between</code><span class="sig-paren">(</span><em>zenith1</em>, <em>azimuth1</em>, <em>zenith2</em>, <em>azimuth2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.angle_between" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the angle between two (zenith, azimuth) coordinates</p>
+<p>Using the haversine formula,
+from: <a class="reference external" href="http://www.movable-type.co.uk/scripts/latlong.html">http://www.movable-type.co.uk/scripts/latlong.html</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>zenith#</strong> – Zenith parts of the coordinates, in radians (0, pi/2).</li>
+<li><strong>azimuth#</strong> – Azimuth parts of the coordinates, in radians (-pi, pi).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Angle between the two coordinates.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.vector_length">
+<code class="descclassname">sapphire.utils.</code><code class="descname">vector_length</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z=0</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.vector_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of a vector given by (x, y, z) coordinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – vector components.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">length of vector.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.distance_between">
+<code class="descclassname">sapphire.utils.</code><code class="descname">distance_between</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.distance_between" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the distance between two (x, y) coordinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x#</strong> – x parts of the coordinates.</li>
+<li><strong>y#</strong> – y parts of the coordinates.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">distance between the two coordinates.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.make_relative">
+<code class="descclassname">sapphire.utils.</code><code class="descname">make_relative</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.make_relative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make first element the origin and make rest relative to it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.which">
+<code class="descclassname">sapphire.utils.</code><code class="descname">which</code><span class="sig-paren">(</span><em>program</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.which" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a command line program is available</p>
+<p>An Exception is raised if the program is not available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>program</strong> – name or program to check for, e.g. ‘wget’.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sapphire.utils.memoize">
+<code class="descclassname">sapphire.utils.</code><code class="descname">memoize</code><span class="sig-paren">(</span><em>method</em><span class="sig-paren">)</span><a class="headerlink" href="#sapphire.utils.memoize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Memoisation cache decorator</p>
+<p>Source: <a class="reference external" href="http://stackoverflow.com/a/29954160/1033535">http://stackoverflow.com/a/29954160/1033535</a></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/header.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="transformations/geographic.html"
+                        title="previous chapter">Transformations between geographic coordinate systems</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="transformations/geographic.html" title="Transformations between geographic coordinate systems"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SAPPHiRE 1.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="sapphire.html" >SAPPHiRE Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009-2016, David Fokkema, Arne de Laat, and Tom Kooij.
+    </div>
+  </body>
+</html>
